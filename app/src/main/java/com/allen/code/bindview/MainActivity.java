@@ -12,12 +12,8 @@ import com.example.OnClick;
 import com.example.TimeLog;
 
 public class MainActivity extends AppCompatActivity {
-
-
     @BindView(R.id.hello)
     View hello;
-
-
     @BindView(R.id.text)
     View text;
     @TimeLog
@@ -26,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ProxyTool.bind(this);
+
     }
 
     @TimeLog

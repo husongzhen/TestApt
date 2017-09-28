@@ -36,8 +36,6 @@ public class ClickMethodViewBinding {
 
     public ClickMethodViewBinding(Element clickElement) {
         this.clickElement = (ExecutableElement) clickElement;
-
-
         OnClick viewById = clickElement.getAnnotation(OnClick.class);
         ids = viewById.value();
         methodName = clickElement.getSimpleName().toString();
