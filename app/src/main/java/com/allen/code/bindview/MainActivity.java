@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
     View hello;
     @BindView(R.id.text)
     View text;
-    @TimeLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @TimeLog
     @OnClick({R.id.hello, R.id.text})
     public void onClick(View view) {
         Toast.makeText(this, "hello world" + "name == " + getName(view.getId()) + " name = " + view.getAccessibilityClassName().toString(), Toast.LENGTH_SHORT).show();
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     public String getName(int id) {
         Resources res = getResources();
-        return res.getResourceEntryName(id);//得到的是 name
-//return res.getResourceName(id);//得到的是 包/type/name
+        return res.getResourceEntryName(id);
     }
 }
