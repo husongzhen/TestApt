@@ -145,7 +145,7 @@ public class BindViewProcessor extends AbstractProcessor {
         //父元素的全限定名
         String qualifiedName = enclosingElement.getQualifiedName().toString();
 
-        // 所在的类不能是private或static修饰
+        // s
         Set<Modifier> modifiers = element.getModifiers();
         if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC)) {
             error(element, "@%s %s must not be private or static. (%s.%s)",
