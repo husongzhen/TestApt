@@ -27,8 +27,7 @@ public class ProxyTool {
   
     public static final String SUFFIX = "$$Proxy";  
   
-    public static void createBinding(@NonNull Object target, @NonNull View root) {  
-  
+    public static void createBinding(@NonNull Object target, @NonNull View root) {
         try {  
             //生成类名+后缀名的代理类，并执行注入操作  
             Class<?> targetClass = target.getClass();  
