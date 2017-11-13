@@ -31,7 +31,7 @@ dependencies {
     compile 'org.aspectj:aspectjrt:1.8.9'
     compile project(':bindview-api')
     annotationProcessor project(':bindview-compiler')
-
+    compile files('libs/dom4j-2.0.2.jar')
 }
 
 

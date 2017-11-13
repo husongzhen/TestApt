@@ -33,13 +33,13 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 
 @AutoService(Processor.class)
-public class BindViewProcessor extends AbstractProcessor {
+public class BindLayoutProcessor extends AbstractProcessor {
 
 
     private Filer mFiler;
     private Elements mElementUtils;
     private Messager messager;
-
+    private Map<String, LayoutProxyClass> mProxyClassMap = new HashMap<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -51,30 +51,14 @@ public class BindViewProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-
-        for (Element element : roundEnvironment.getElementsAnnotatedWith(BindView.class)) {
-            if (!isValid(BindView.class, "fields", element)) {
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(LayoutId.class)) {
+            if (!isValid(LayoutId.class, "methods", element)) {
                 return true;
             }
-            parseViewById(element);
-
+            parseLayout(element);
         }
-
-        for (Element element : roundEnvironment.getElementsAnnotatedWith(OnClick.class)) {
-            if (!isValid(OnClick.class, "methods", element)) {
-                return true;
-            }
-            parseClick(element);
-        }
-
-
-
-
-//        testID();
-
-
         //为每个宿主类生成所对应的代理类
-        for (ProxyClass proxyClass_ : mProxyClassMap.values()) {
+        for (LayoutProxyClass proxyClass_ : mProxyClassMap.values()) {
             try {
                 proxyClass_.generateProxy().writeTo(mFiler);
             } catch (IOException e) {
@@ -86,39 +70,30 @@ public class BindViewProcessor extends AbstractProcessor {
         return false;
     }
 
-
-    private void parseClick(Element element) {
-        ProxyClass proxyClass = getProxyClass(element);
-        ClickMethodViewBinding clickMethodViewBinding = new ClickMethodViewBinding(element);
-        proxyClass.add(clickMethodViewBinding);
-    }
-
-
-    private Map<String, ProxyClass> mProxyClassMap = new HashMap<>();
-
-    /**
-     * 处理ViewById注解
-     *
-     * @param element
-     */
-    private void parseViewById(Element element) {
-        ProxyClass proxyClass = getProxyClass(element);
+    private void parseLayout(Element element) {
+        error(null, "parseLayout");
+        LayoutProxyClass proxyClass = getProxyClass(element);
         //把被注解的view对象封装成一个model，放入代理类的集合中
-        FieldViewBinding bindView = new FieldViewBinding(element);
-        proxyClass.add(bindView);
+        LayoutBinding binding = new LayoutBinding(messager, element);
+        proxyClass.setBindViews(binding);
+        error(null, "parseLayout.end");
     }
 
+
     /**
+     * /**
      * 生成或获取注解元素所对应的ProxyClass类
      */
-    private ProxyClass getProxyClass(Element element) {
+    private LayoutProxyClass getProxyClass(Element element) {
         //被注解的变量所在的类
         TypeElement classElement = (TypeElement) element.getEnclosingElement();
         String qualifiedName = classElement.getQualifiedName().toString();
-        ProxyClass proxyClass = mProxyClassMap.get(qualifiedName);
+        LayoutProxyClass proxyClass = mProxyClassMap.get(qualifiedName);
         if (proxyClass == null) {
             //生成每个宿主类所对应的代理类，后面用于生产java文件
-            proxyClass = new ProxyClass(classElement, mElementUtils);
+            error(null, "proxyClass = " + classElement + "," + mElementUtils);
+            proxyClass = new LayoutProxyClass(classElement, mElementUtils);
+            error(null, "proxyClass = " + proxyClass);
             mProxyClassMap.put(qualifiedName, proxyClass);
         }
         return proxyClass;
@@ -128,8 +103,6 @@ public class BindViewProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new LinkedHashSet<>();
-        types.add(BindView.class.getName());
-        types.add(OnClick.class.getName());
         types.add(LayoutId.class.getName());
         return types;
     }
@@ -186,7 +159,7 @@ public class BindViewProcessor extends AbstractProcessor {
     }
 
     private void error(Element e, String msg, Object... args) {
-        messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args), e);
+        messager.printMessage(Diagnostic.Kind.WARNING, String.format(msg, args), e);
     }
 
 }

@@ -8,21 +8,36 @@ import android.widget.Toast;
 
 import com.allen.code.bindview.switchBuk.ICaseAction;
 import com.allen.code.bindview.switchBuk.SwichCase;
-import com.allen.code.bindview_api.ProxyTool;
-import com.example.BindView;
+import com.example.LayoutId;
 import com.example.OnClick;
 
-public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.hello)
-    View hello;
-    @BindView(R.id.text)
-    View text;
+import static com.allen.code.bindview.MainActivity$$Layout.hello;
+import static com.allen.code.bindview.MainActivity$$Layout.text;
 
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+//    @BindView(R.id.hello)
+//    View hello;
+//    @BindView(R.id.text)
+//    View text;
+
+
+    @LayoutId(value = "activity_main", path = "app/src/main/res/layout/")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ProxyTool.bind(this);
+//        ProxyTool.bind(this);
+
+
+        MainActivity$$Layout mainActivity$$Layout = new MainActivity$$Layout();
+        mainActivity$$Layout.inject(this);
+//        MainActivity$$Layout.hello.setOnClickListener(this);
+//        MainActivity$$Layout.text.setOnClickListener(this);
+
+        text.setOnClickListener(this);
+
+        hello.setOnClickListener(this);
+
 
     }
 
