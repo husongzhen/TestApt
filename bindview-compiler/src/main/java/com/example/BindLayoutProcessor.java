@@ -71,12 +71,10 @@ public class BindLayoutProcessor extends AbstractProcessor {
     }
 
     private void parseLayout(Element element) {
-        error(null, "parseLayout");
         LayoutProxyClass proxyClass = getProxyClass(element);
         //把被注解的view对象封装成一个model，放入代理类的集合中
         LayoutBinding binding = new LayoutBinding(messager, element);
         proxyClass.setBindViews(binding);
-        error(null, "parseLayout.end");
     }
 
 
@@ -91,9 +89,7 @@ public class BindLayoutProcessor extends AbstractProcessor {
         LayoutProxyClass proxyClass = mProxyClassMap.get(qualifiedName);
         if (proxyClass == null) {
             //生成每个宿主类所对应的代理类，后面用于生产java文件
-            error(null, "proxyClass = " + classElement + "," + mElementUtils);
             proxyClass = new LayoutProxyClass(classElement, mElementUtils);
-            error(null, "proxyClass = " + proxyClass);
             mProxyClassMap.put(qualifiedName, proxyClass);
         }
         return proxyClass;

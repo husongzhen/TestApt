@@ -45,12 +45,15 @@ public class LayoutProxyClass {
 
     private static final String viewPackage = "android.widget";
 
-    //proxytool.IProxy
+    /**
+     * proxytool.IProxy
+     */
     public static final ClassName IPROXY = ClassName.get("com.allen.code.bindview_api", "ILayoutProxy");
-    public static final ClassName Resources = ClassName.get("android.content.res", "Resources");
-    public static final ClassName INTEGER = ClassName.get(Integer.class);
-    //android.view.View
 
+
+    /**
+     * android.view.View
+     */
     public static final String SUFFIX = "$$Layout";
 
     /**
@@ -65,7 +68,7 @@ public class LayoutProxyClass {
                 .addParameter(TypeName.get(mTypeElement.asType()), "activity", Modifier.FINAL);
         injectMethodBuilder.addStatement("activity.setContentView(R.layout.$N)", bindViews.getLayoutName());
         for (ViewModel item : bindViews.getViewModels()) {
-            injectMethodBuilder.addStatement("$N = ($N)activity.findViewById(R.id.$N)", item.getId(),item.getViewType(), item.getId());
+            injectMethodBuilder.addStatement("$N = ($N)activity.findViewById(R.id.$N)", item.getId(), item.getViewType(), item.getId());
         }
         // 添加以$$Proxy为后缀的类
         TypeSpec.Builder builder = TypeSpec.classBuilder(mTypeElement.getSimpleName() + SUFFIX)
