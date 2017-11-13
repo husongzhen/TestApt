@@ -63,18 +63,10 @@ public class LayoutProxyClass {
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)
                 .addParameter(TypeName.get(mTypeElement.asType()), "activity", Modifier.FINAL);
-
-
-        injectMethodBuilder.addStatement("$T resources = activity.getResources()", Resources);
-        injectMethodBuilder.addStatement("$T layoutId = resources.getIdentifier(\"$N\", \"layout\", activity.getPackageName())", INTEGER, bindViews.getLayoutName());
-        injectMethodBuilder.addStatement("activity.setContentView(layoutId)");
-
+        injectMethodBuilder.addStatement("activity.setContentView(R.layout.$N)", bindViews.getLayoutName());
         for (ViewModel item : bindViews.getViewModels()) {
-            injectMethodBuilder.addStatement("$T $N = resources.getIdentifier(\"$N\", \"id\", activity.getPackageName())", INTEGER, getViewIdName(item), item.getId());
-            injectMethodBuilder.addStatement("$N = ($N)activity.findViewById($N)", item.getId(),item.getViewType(), getViewIdName(item));
+            injectMethodBuilder.addStatement("$N = ($N)activity.findViewById(R.id.$N)", item.getId(),item.getViewType(), item.getId());
         }
-
-
         // 添加以$$Proxy为后缀的类
         TypeSpec.Builder builder = TypeSpec.classBuilder(mTypeElement.getSimpleName() + SUFFIX)
                 .addModifiers(Modifier.PUBLIC)
